@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        def versionPropsFile = file('versions.properties')
+
+        if (versionPropsFile.canRead()) {
+            def Properties versionProps = new Properties()
+            versionProps.load(new FileInputStream(versionPropsFile))
+
+            def versionCodeNo = versionProps['VERSION_CODE'].toInteger()
+            versionProps['VERSION_CODE'] = versionCodeNo.toString()
+
+            def versionNameMajor = versionProps['VERSION_NAME_MAJOR'].toInteger()
+            versionProps['VERSION_NAME_MAJOR'] = versionNameMajor.toString()
+
+            def versionNameMinor = versionProps['VERSION_NAME_MINOR'].toInteger()
+            versionProps['VERSION_NAME_MINOR'] = versionNameMinor.toString()
+
+            def versionNamePatch = versionProps['VERSION_NAME_PATCH'].toInteger()
+            versionProps['VERSION_NAME_PATCH'] = versionNamePatch.toString()
+
+            def versionNameBuild = versionProps['VERSION_NAME_BUILD'].toInteger() + 1
+            versionProps['VERSION_NAME_BUILD'] = versionNameBuild.toString()
+
+
+            versionProps.store(versionPropsFile.newWriter(), null)
+
+            defaultConfig {
+                applicationId "com.example.lab1"
+                minSdkVersion 23
+                targetSdkVersion 29
+                testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+                versionCode versionCodeNo
+                versionName versionNameMajor + "." + versionNameMinor + "," + versionNamePatch + "." + versionNameBuild
+            }
+        } else {
+            throw new GradleException("Could not read versions.properties!")
+        }
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}
