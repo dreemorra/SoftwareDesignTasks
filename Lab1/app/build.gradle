@@ -1,46 +1,16 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.android.application'
+apply from: "$project.rootDir/app/script-git-version.gradle"
 
 android {
+
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        def versionPropsFile = file('versions.properties')
-
-        if (versionPropsFile.canRead()) {
-            def Properties versionProps = new Properties()
-            versionProps.load(new FileInputStream(versionPropsFile))
-
-            def versionCodeNo = versionProps['VERSION_CODE'].toInteger()
-            versionProps['VERSION_CODE'] = versionCodeNo.toString()
-
-            def versionNameMajor = versionProps['VERSION_NAME_MAJOR'].toInteger()
-            versionProps['VERSION_NAME_MAJOR'] = versionNameMajor.toString()
-
-            def versionNameMinor = versionProps['VERSION_NAME_MINOR'].toInteger()
-            versionProps['VERSION_NAME_MINOR'] = versionNameMinor.toString()
-
-            def versionNamePatch = versionProps['VERSION_NAME_PATCH'].toInteger()
-            versionProps['VERSION_NAME_PATCH'] = versionNamePatch.toString()
-
-            def versionNameBuild = versionProps['VERSION_NAME_BUILD'].toInteger() + 1
-            versionProps['VERSION_NAME_BUILD'] = versionNameBuild.toString()
-
-
-            versionProps.store(versionPropsFile.newWriter(), null)
-
-            defaultConfig {
-                applicationId "com.example.lab1"
-                minSdkVersion 23
-                targetSdkVersion 29
-                testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-                versionCode versionCodeNo
-                versionName versionNameMajor + "." + versionNameMinor + "," + versionNamePatch + "." + versionNameBuild
-            }
-        } else {
-            throw new GradleException("Could not read versions.properties!")
-        }
-
+        minSdkVersion 14
+        targetSdkVersion 23
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -52,6 +22,19 @@ android {
             debuggable true
         }
 
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        dev {
+            versionCode gitVersionCodeTime
+            versionName gitVersionName
+        }
+
+        prod {
+            versionCode gitVersionCode
+            versionName gitVersionName
+        }
     }
 }
 
