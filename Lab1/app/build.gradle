@@ -4,17 +4,26 @@ apply from: "$project.rootDir/app/script-git-version.gradle"
 
 android {
 
+    signingConfigs {
+        release {
+            storeFile file('/home/mora/University/keystores/androidkeys.jks')
+            keyAlias = 'ReleaseKey'
+            storePassword 'potato'
+            keyPassword 'releasepotato'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 26
     }
 
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         debug {

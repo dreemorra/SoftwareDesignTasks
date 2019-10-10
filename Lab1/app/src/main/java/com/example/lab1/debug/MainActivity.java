@@ -1,54 +1,48 @@
 package com.example.lab1.debug;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
 import com.example.lab1.BuildConfig;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.example.lab1.R;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.provider.Settings.Secure;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkForPermission();
 
         TextView androidVersionView = findViewById(R.id.textAndroid);
         TextView versionName = findViewById(R.id.textName);
         TextView versionCode = findViewById(R.id.textCode);
         TextView deviceID = findViewById(R.id.deviceID);
 
-        checkForPermission(deviceID);
-
         androidVersionView.setText(String.format(Locale.getDefault(), "Android version: %s(%d)", Build.VERSION.RELEASE, Build.VERSION.SDK_INT));
         versionName.setText(String.format(Locale.getDefault(), "Program version: %s", BuildConfig.VERSION_NAME));
         versionCode.setText(String.format(Locale.getDefault(), "Code version: %s", BuildConfig.VERSION_CODE));
 
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            deviceID.setText(String.format(Locale.getDefault(), "Device ID: %s", Secure.getString(getContentResolver(), "android_id")));
+        }
     }
 
-    private void checkForPermission(TextView view) {
+    private void checkForPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -75,6 +69,28 @@ public class MainActivity extends AppCompatActivity {
                         1);
             }
         }
-        else view.setText(String.format(Locale.getDefault(), "Device ID: %s", Secure.getString(getContentResolver(), "android_id")));
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+
+        boolean flag;
+        flag = true;
+        if(requestCode == 1)
+        {
+            for (int i:grantResults)
+            {
+                if( i == PackageManager.PERMISSION_DENIED)
+                    flag = false;
+
+            }
+            if (flag)
+            {
+                Intent intent = new Intent(this,MainActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        }
+    }
+
 }
