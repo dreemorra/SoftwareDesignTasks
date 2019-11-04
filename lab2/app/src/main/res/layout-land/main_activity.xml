@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="top"
+    android:orientation="vertical">
+
+    <fragment android:name="com.example.lab2.TextFragment"
+        android:id="@+id/text_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/text_fragment"
+        android:layout_gravity="top"/>
+
+    <TableRow
+        android:id="@+id/tableRow_land"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/text_fragment"
+        android:orientation="horizontal">
+    <fragment
+        android:id="@+id/sci_fragment"
+        android:name="com.example.lab2.SciFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/sci_fragment"
+        android:layout_gravity="start"
+        android:layout_weight="1"/>
+    <fragment
+        android:id="@+id/buttons_fragment"
+        android:name="com.example.lab2.ButtonsFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        tools:layout="@layout/buttons_fragment"/>
+    </TableRow>
+
+</RelativeLayout>

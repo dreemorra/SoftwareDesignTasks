@@ -21,6 +21,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+    TextView deviceID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,22 +32,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         TextView androidVersionView = findViewById(R.id.textAndroid);
         TextView versionName = findViewById(R.id.textName);
         TextView versionCode = findViewById(R.id.textCode);
-        TextView deviceID = findViewById(R.id.deviceID);
+        deviceID = findViewById(R.id.deviceID);
 
         androidVersionView.setText(String.format(Locale.getDefault(), "Android version: %s(%d)", Build.VERSION.RELEASE, Build.VERSION.SDK_INT));
         versionName.setText(String.format(Locale.getDefault(), "Program version: %s", BuildConfig.VERSION_NAME));
         versionCode.setText(String.format(Locale.getDefault(), "Code version: %s", BuildConfig.VERSION_CODE));
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            deviceID.setText(String.format(Locale.getDefault(), "Device ID: %s", Secure.getString(getContentResolver(), "android_id")));
-        }
+        // Device ID is an unique for each user 64-bit hex string
+
     }
 
     private void checkForPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+            // Call dialog with explanation why we need this permission
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_PHONE_STATE)) {
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
                 alertBuilder.setCancelable(true);
                 alertBuilder.setTitle("This permission is necessary");
@@ -62,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 AlertDialog alert = alertBuilder.create();
                 alert.show();
-            } else {
+            }
+            else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_PHONE_STATE},
@@ -72,23 +75,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         boolean flag;
         flag = true;
-        if(requestCode == 1)
-        {
-            for (int i:grantResults)
-            {
+        if(requestCode == 1) {
+            for (int i:grantResults) {
                 if( i == PackageManager.PERMISSION_DENIED)
                     flag = false;
-
             }
-            if (flag)
-            {
-                Intent intent = new Intent(this,MainActivity.class);
-                finish();
-                startActivity(intent);
+            if (flag) {
+                // An intent is an abstract description of an operation to be performed
+                deviceID.setText(String.format(Locale.getDefault(), "Device ID: %s", Secure.getString(getContentResolver(), "android_id")));
             }
         }
     }
