@@ -1,6 +1,6 @@
 <resources>
     //base buttons
-    <string name="app_name">lab2</string>
+    <string name="app_name">lab2full</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>

@@ -1,11 +1,10 @@
-package com.example.lab2;
+package lab2;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.res.Configuration;
@@ -28,10 +27,6 @@ public class MainActivity extends AppCompatActivity {
             ViewPager viewPager = findViewById(R.id.view_pager);
             viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
         }
-//        else {
-//            getSupportFragmentManager().beginTransaction().add(R.id.tableRow_land, new ButtonsFragment()).commit();
-//            getSupportFragmentManager().beginTransaction().add(R.id.tableRow_land, new SciFragment()).commit();
-//        }
     }
 
 }

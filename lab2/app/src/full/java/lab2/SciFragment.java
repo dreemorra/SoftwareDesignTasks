@@ -1,4 +1,4 @@
-package com.example.lab2;
+package lab2;
 
 import android.os.Bundle;
 
