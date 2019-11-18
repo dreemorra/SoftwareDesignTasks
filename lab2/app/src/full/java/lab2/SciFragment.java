@@ -1,5 +1,4 @@
 package lab2;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,16 +14,16 @@ import android.widget.TextView;
 
 import org.mariuszgromada.math.mxparser.*;
 
-public class SciFragment extends Fragment {
+import mainpkg.ButtonsFragment;
+
+public class SciFragment extends Fragment implements View.OnClickListener {
 
     boolean inverted = false;
 
-    private Button closeBracketButton, openBracketButton, oneDivXButton, xSquaredButton,
-            xCubedButton, xNButton, xFactButton, rootButton, nRootButton, eButton, lnButton,
-            logButton, sinButton, cosButton, tanButton, piButton, degRadButton, invButton;
-
     private EditText input;
+    private Button degRadButton, sinButton, cosButton, tanButton, logButton, lnButton;
     private TextView degRadLabel;
+
 
     public static ButtonsFragment newInstance() {
         return new ButtonsFragment();
@@ -33,172 +32,143 @@ public class SciFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.sci_fragment, container, false);
+        View v = (View) inflater.inflate(R.layout.sci_fragment, container, false);
+        v.findViewById(R.id.close_bracket).setOnClickListener(this);
+        v.findViewById(R.id.open_bracket).setOnClickListener(this);
+        v.findViewById(R.id.one_div_x).setOnClickListener(this);
+        v.findViewById(R.id.x__squared).setOnClickListener(this);
+        v.findViewById(R.id.x__squared).setOnClickListener(this);
+        v.findViewById(R.id.x__n).setOnClickListener(this);
+        v.findViewById(R.id.x_fact).setOnClickListener(this);
+        v.findViewById(R.id.root).setOnClickListener(this);
+        v.findViewById(R.id.n_root).setOnClickListener(this);
+        v.findViewById(R.id.e).setOnClickListener(this);
+        v.findViewById(R.id.ln).setOnClickListener(this);
+        v.findViewById(R.id.log).setOnClickListener(this);
+        v.findViewById(R.id.sin).setOnClickListener(this);
+        v.findViewById(R.id.cos).setOnClickListener(this);
+        v.findViewById(R.id.tan).setOnClickListener(this);
+        v.findViewById(R.id.pi).setOnClickListener(this);
+        v.findViewById(R.id.deg_rad).setOnClickListener(this);
+        v.findViewById(R.id.inv).setOnClickListener(this);
+        return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        closeBracketButton = getActivity().findViewById(R.id.close_bracket);
-        openBracketButton = getActivity().findViewById(R.id.open_bracket);
-        oneDivXButton = getActivity().findViewById(R.id.one_div_x);
-        xSquaredButton = getActivity().findViewById(R.id.x__squared);
-        xCubedButton = getActivity().findViewById(R.id.x__cubed);
-        xNButton = getActivity().findViewById(R.id.x__n);
-        xFactButton = getActivity().findViewById(R.id.x_fact);
-        rootButton = getActivity().findViewById(R.id.root);
-        nRootButton = getActivity().findViewById(R.id.n_root);
-        eButton = getActivity().findViewById(R.id.e);
-        lnButton = getActivity().findViewById(R.id.ln);
-        logButton = getActivity().findViewById(R.id.log);
+        input = getActivity().findViewById(R.id.input);
+        degRadButton = getActivity().findViewById(R.id.deg_rad);
+        degRadLabel = getActivity().findViewById(R.id.deg_rad_label);
+
         sinButton = getActivity().findViewById(R.id.sin);
         cosButton = getActivity().findViewById(R.id.cos);
         tanButton = getActivity().findViewById(R.id.tan);
-        piButton = getActivity().findViewById(R.id.pi);
-        degRadButton = getActivity().findViewById(R.id.deg_rad);
-        invButton = getActivity().findViewById(R.id.inv);
+        logButton = getActivity().findViewById(R.id.log);
+        lnButton = getActivity().findViewById(R.id.ln);
+    }
 
-        input = getActivity().findViewById(R.id.input);
-        degRadLabel = getActivity().findViewById(R.id.deg_rad_label);
-
-        closeBracketButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.close_bracket:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.close_bracket));
+                break;
             }
-        });
-
-        openBracketButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.open_bracket:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.open_bracket));
+                break;
             }
-        });
-
-        oneDivXButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.one_div_x:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.one_div_x_action));
+                break;
             }
-        });
-
-        xSquaredButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.x__squared:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.x__squared_action));
+                break;
             }
-        });
-
-        xCubedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.x__cubed:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.x__cubed_action));
+                break;
             }
-        });
-
-        xNButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.x__n:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.x__n_action));
+                break;
             }
-        });
-
-        xFactButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.x_fact:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.x_fact_action));
+                break;
             }
-        });
-
-        rootButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.root:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.root_action));
+                break;
             }
-        });
-
-        nRootButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.n_root:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.n_root_action));
+                break;
             }
-        });
-
-        eButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.e:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.e));
+                break;
             }
-        });
-
-        lnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.ln:
+            {
                 if (inverted) {
                     input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.ln_inv));
                 }
                 else input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.ln_action));
+                break;
             }
-        });
-
-        logButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.log:
+            {
                 if (inverted) {
                     input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.log_inv));
                 }
                 else input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.log_action));
+                break;
             }
-        });
-
-        sinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.sin:
+            {
                 if (inverted) {
                     input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.asin));
                 }
                 else input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.sin_action));
+                break;
             }
-        });
-
-        cosButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.cos:
+            {
                 if (inverted) {
                     input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.acos));
                 }
                 else input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.cos_action));
+                break;
             }
-        });
-
-        tanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.tan:
+            {
                 if (inverted) {
                     input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.atan));
                 }
                 else input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.tan_action));
+                break;
             }
-        });
-
-        piButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.pi:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.pi_action));
+                break;
             }
-        });
-
-        piButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.pi_action));
-            }
-        });
-
-        degRadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.deg_rad:
+            {
                 if (mXparser.checkIfDegreesMode()) {
                     mXparser.setRadiansMode();
                     degRadButton.setText(getResources().getString(R.string.deg));
@@ -209,13 +179,10 @@ public class SciFragment extends Fragment {
                     degRadButton.setText(getResources().getString(R.string.rad));
                     degRadLabel.setText(getResources().getString(R.string.deg));
                 }
+                break;
             }
-        });
-
-        //TODO: add to inv buttons that "if"
-        invButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.inv:
+            {
                 inverted = !inverted;
                 if (inverted) {
                     sinButton.setText(getResources().getString(R.string.asin_button));
@@ -231,7 +198,8 @@ public class SciFragment extends Fragment {
                     logButton.setText(getResources().getString(R.string.log));
                     lnButton.setText(getResources().getString(R.string.ln));
                 }
+                break;
             }
-        });
+        }
     }
 }

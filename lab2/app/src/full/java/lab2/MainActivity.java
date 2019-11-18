@@ -10,10 +10,10 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import mainpkg.ButtonsFragment;
+
 
 public class MainActivity extends AppCompatActivity {
-
-    //TODO: add demo flavor
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

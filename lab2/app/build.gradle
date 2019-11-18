@@ -25,9 +25,11 @@ android {
     productFlavors {
         demo {
             dimension = 'version'
+            applicationId "lab2.demo"
         }
         full {
             dimension = 'version'
+            applicationId "lab2.full"
         }
     }
 }

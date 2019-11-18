@@ -6,7 +6,7 @@
     android:layout_gravity="top"
     android:orientation="vertical">
 
-    <fragment android:name="lab2.TextFragment"
+    <fragment android:name="mainpkg.TextFragment"
     android:id="@+id/text_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

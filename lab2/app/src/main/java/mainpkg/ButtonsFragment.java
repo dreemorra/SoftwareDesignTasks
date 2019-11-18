@@ -1,4 +1,4 @@
-package lab2;
+package mainpkg;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,19 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import lab2.R;
-
 import org.mariuszgromada.math.mxparser.Expression;
 
-public class ButtonsFragment extends Fragment {
+import lab2.R;
+
+public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
     public static ButtonsFragment newInstance() {
         return new ButtonsFragment();
     }
-
-    private Button button0, button1, button2, button3, button4, button5, button6,
-            button7, button8, button9, buttonDot, buttonPerc, buttonSum, buttonSub, buttonDiv,
-            buttonMul, buttonC, buttonEqual, buttonErase, buttonMC, buttonMSum, buttonMSub, buttonMR;
 
     private EditText input, result;
 
@@ -38,7 +33,30 @@ public class ButtonsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.buttons_fragment, container, false);
+        final View rootView = (View) inflater.inflate(R.layout.buttons_fragment, container, false);
+        rootView.findViewById(R.id.button0).setOnClickListener(this);
+        rootView.findViewById(R.id.button1).setOnClickListener(this);
+        rootView.findViewById(R.id.button2).setOnClickListener(this);
+        rootView.findViewById(R.id.button3).setOnClickListener(this);
+        rootView.findViewById(R.id.button4).setOnClickListener(this);
+        rootView.findViewById(R.id.button5).setOnClickListener(this);
+        rootView.findViewById(R.id.button6).setOnClickListener(this);
+        rootView.findViewById(R.id.button7).setOnClickListener(this);
+        rootView.findViewById(R.id.button8).setOnClickListener(this);
+        rootView.findViewById(R.id.button9).setOnClickListener(this);
+        rootView.findViewById(R.id.button_dot).setOnClickListener(this);
+        rootView.findViewById(R.id.button_perc).setOnClickListener(this);
+        rootView.findViewById(R.id.button_sum).setOnClickListener(this);
+        rootView.findViewById(R.id.button_sub).setOnClickListener(this);
+        rootView.findViewById(R.id.button_mul).setOnClickListener(this);
+        rootView.findViewById(R.id.button_div).setOnClickListener(this);
+        rootView.findViewById(R.id.button_clear).setOnClickListener(this);
+        rootView.findViewById(R.id.button_erase).setOnClickListener(this);
+        rootView.findViewById(R.id.button_eq).setOnClickListener(this);
+        rootView.findViewById(R.id.button_mem_clear).setOnClickListener(this);
+        rootView.findViewById(R.id.button_mem_sum).setOnClickListener(this);
+        rootView.findViewById(R.id.button_mem_sub).setOnClickListener(this);
+        rootView.findViewById(R.id.button_mem_replace).setOnClickListener(this);
         return rootView;
     }
 
@@ -46,37 +64,12 @@ public class ButtonsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        button0 = getActivity().findViewById(R.id.button0);
-        button1 = getActivity().findViewById(R.id.button1);
-        button2 = getActivity().findViewById(R.id.button2);
-        button3 = getActivity().findViewById(R.id.button3);
-        button4 = getActivity().findViewById(R.id.button4);
-        button5 = getActivity().findViewById(R.id.button5);
-        button6 = getActivity().findViewById(R.id.button6);
-        button7 = getActivity().findViewById(R.id.button7);
-        button8 = getActivity().findViewById(R.id.button8);
-        button9 = getActivity().findViewById(R.id.button9);
-        buttonDot = getActivity().findViewById(R.id.button_dot);
-        buttonPerc = getActivity().findViewById(R.id.button_perc);
-        buttonSum = getActivity().findViewById(R.id.button_sum);
-        buttonSub = getActivity().findViewById(R.id.button_sub);
-        buttonMul = getActivity().findViewById(R.id.button_mul);
-        buttonDiv = getActivity().findViewById(R.id.button_div);
-        buttonC = getActivity().findViewById(R.id.button_clear);
-        buttonErase = getActivity().findViewById(R.id.button_erase);
-        buttonEqual = getActivity().findViewById(R.id.button_eq);
-        buttonMC = getActivity().findViewById(R.id.button_mem_clear);
-        buttonMSum = getActivity().findViewById(R.id.button_mem_sum);
-        buttonMSub = getActivity().findViewById(R.id.button_mem_sub);
-        buttonMR = getActivity().findViewById(R.id.button_mem_replace);
 
         input = getActivity().findViewById(R.id.input);
         input.setSelection(input.getText().length());
         result = getActivity().findViewById(R.id.result);
         memoryLabel = getActivity().findViewById(R.id.memory_label);
         memory = 0.;
-
-        final MediaPlayer mp = MediaPlayer.create(this.getActivity(), R.raw.honk);
 
         input.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,145 +91,112 @@ public class ButtonsFragment extends Fragment {
                 else result.setText("");
             }
         });
+    }
 
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button1:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.one));
+                break;
             }
-        });
-
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button2:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.two));
+                break;
             }
-        });
-
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button3:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.three));
+                break;
             }
-        });
-
-        button4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button4:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.four));
+                break;
             }
-        });
-
-        button5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button5:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.five));
+                break;
             }
-        });
-
-        button6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button6:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.six));
+                break;
             }
-        });
-
-        button7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button7:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.seven));
+                break;
             }
-        });
-
-        button8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button8:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.eight));
+                break;
             }
-        });
-
-        button9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button9:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.nine));
+                break;
             }
-        });
-
-        button0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button0:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.zero));
+                break;
             }
-        });
-
-        buttonDot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_dot:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.dot));
+                break;
             }
-        });
-
-        buttonPerc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_perc:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.percent));
+                break;
             }
-        });
-
-        buttonSum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_sum:
+            {
                 if (input.getText().length() != 0)
                     input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.sum));
+                break;
             }
-        });
-
-        buttonSub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_sub:
+            {
                 input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.sub));
+                break;
             }
-        });
-
-        buttonMul.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_mul:
+            {
                 if (input.getText().length() != 0)
                     input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.mul));
+                break;
             }
-        });
-
-        buttonDiv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_div:
+            {
                 if (input.getText().length() != 0)
                     input.getText().insert(input.getSelectionStart(), getResources().getString(R.string.div));
+                break;
             }
-        });
-
-        buttonEqual.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_eq:
+            {
                 if (result.getText().length() != 0) {
                     input.setText(result.getText().toString());
                     result.getText().clear();
                     input.setSelection(input.getText().length());
-                    mp.start();
+ //                   mp.start();
                 }
+                break;
             }
-        });
-
-        buttonC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_clear:
+            {
                 input.getText().clear();
                 result.getText().clear();
+                break;
             }
-        });
-
-        buttonErase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_erase:
+            {
                 CharSequence text = input.getText().toString();
                 int cursorPos = input.getSelectionEnd();
                 if (cursorPos != 0) {
@@ -249,28 +209,22 @@ public class ButtonsFragment extends Fragment {
                         input.setSelection(cursorPos-1);
                     else input.setSelection(text.length());
                 }
+                break;
             }
-        });
-
-        buttonMC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_mem_clear:
+            {
                 memory = 0.;
                 memoryLabel.setText("");
+                break;
             }
-        });
-
-        buttonMR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_mem_replace:
+            {
                 if (memory != 0.)
                     input.getText().insert(input.getSelectionStart(), memory.toString());
+                break;
             }
-        });
-
-        buttonMSum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_mem_sum:
+            {
                 if (result.getText().length() != 0)
                     memory += Double.valueOf(result.getText().toString());
                 if (result.getText().length() == 0) {
@@ -285,12 +239,10 @@ public class ButtonsFragment extends Fragment {
                     memoryLabel.setText("");
                 }
                 else memoryLabel.setText(getResources().getString(R.string.memory));
+                break;
             }
-        });
-
-        buttonMSub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.button_mem_sub:
+            {
                 if (result.getText().length() != 0)
                     memory -= Double.valueOf(result.getText().toString());
                 if (result.getText().length() == 0) {
@@ -305,7 +257,8 @@ public class ButtonsFragment extends Fragment {
                     memoryLabel.setText("");
                 }
                 else memoryLabel.setText(getResources().getString(R.string.memory));
-                }
-        });
+                break;
+            }
+        }
     }
 }

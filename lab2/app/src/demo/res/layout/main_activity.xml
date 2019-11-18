@@ -6,14 +6,14 @@
     android:layout_gravity="top"
     android:orientation="vertical">
 
-    <fragment android:name="lab2.TextFragment"
+    <fragment android:name="mainpkg.TextFragment"
     android:id="@+id/text_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:layout="@layout/text_fragment"/>
 
     <fragment
-    android:name="lab2.ButtonsFragment"
+    android:name="mainpkg.ButtonsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/buttons_fragment"
