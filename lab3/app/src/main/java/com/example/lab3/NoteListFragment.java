@@ -1,17 +1,14 @@
 package com.example.lab3;
-
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NoteListFragment extends Fragment {
@@ -29,35 +26,43 @@ public class NoteListFragment extends Fragment {
     }
 }
 
-class NoteAdapter extends ArrayAdapter<Note> {
+class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
+    private List<Note> values;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView titleView;
+        public TextView tagView;
+        public TextView descriptionView;
+        public ViewHolder(View view) {
+            super(view);
+            titleView = view.findViewById(R.id.title);
+            tagView = view.findViewById(R.id.tag);
+            descriptionView = view.findViewById(R.id.description);
+        }
+    }
 
-    private final Context context;
-    private final Note[] values;
-
-    public NoteAdapter(Context context, Note[] values) {
-        super(context, -1, values);
-        this.context = context;
+    public NoteAdapter(List<Note> values) {
         this.values = values;
     }
 
-    public Note getItem(int position){
-        return values[position];
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent,
+                                         int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.fragment_notelist, parent, false);
+
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup container) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.titleView.setText(values.get(position).Title);
+//        holder.tagView.setText(values.get(position).Tag);
+        holder.descriptionView.setText(values.get(position).Description);
+    }
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.fragment_notelist, container, false);
-        }
-
-        TextView titleView = (TextView) convertView.findViewById(R.id.title);
-        TextView tagView = (TextView) convertView.findViewById(R.id.tag);
-        TextView descriptionView = (TextView) convertView.findViewById(R.id.description);
-        titleView.setText(values[position].Title);
-        tagView.setText(values[position].Tag);
-        descriptionView.setText(values[position].Description);
-        return convertView;
+    @Override
+    public int getItemCount() {
+        return values.size();
     }
 }

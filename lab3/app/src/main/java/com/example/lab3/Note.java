@@ -1,15 +1,16 @@
 package com.example.lab3;
 
-public class Note {
-    public final String Id;
-    public final String Title;
-    public final String Tag;
-    public final String Description;
+import com.orm.SugarRecord;
 
-    public Note(String id, String title, String tag, String description) {
-        this.Id = id;
+public class Note extends SugarRecord<Note> {
+    public String Title;
+    public String Description;
+
+    public Note(String title, String description) {
         this.Title = title;
-        this.Tag = tag;
         this.Description = description;
     }
+
+    public Note()
+    {}
 }

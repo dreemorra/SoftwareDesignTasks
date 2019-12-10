@@ -10,18 +10,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="16dp">
 
         <EditText
             android:id="@+id/enter_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"/>
+            android:hint="Title"
+            android:background="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:layout_marginBottom="10sp"/>
         <EditText
             android:id="@+id/enter_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Content"/>
+            android:hint="Content"
+            android:background="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10sp"/>
     </LinearLayout>
 
 </LinearLayout>
