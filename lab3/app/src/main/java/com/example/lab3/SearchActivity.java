@@ -7,6 +7,8 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.orm.SugarRecord;
+
 public class SearchActivity extends AppCompatActivity {
 
     @Override
@@ -22,7 +24,7 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            //doMySearch(query);
+//            doMySearch(query);
         }
 
     }

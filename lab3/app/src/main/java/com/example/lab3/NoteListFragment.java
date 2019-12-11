@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,42 +28,57 @@ public class NoteListFragment extends Fragment {
 }
 
 class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
-    private List<Note> values;
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+    public interface OnItemClickListener {
+        void onItemClick(Note item, int position);
+    }
+
+    public interface OnItemLongClickListener {
+        boolean onItemLongClick(Note item, int position);
+    }
+
+    private final List<Note> items;
+    private final OnItemClickListener listener;
+    private final OnItemLongClickListener longClickListener;
+
+    public NoteAdapter(List<Note> items, OnItemClickListener listener, OnItemLongClickListener longListener) {
+        this.items = items;
+        this.listener = listener;
+        this.longClickListener = longListener;
+    }
+
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_notelist, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.bind(items.get(position), listener, longClickListener);
+    }
+
+    @Override public int getItemCount() {
+        return items.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
         public TextView titleView;
         public TextView tagView;
         public TextView descriptionView;
-        public ViewHolder(View view) {
-            super(view);
-            titleView = view.findViewById(R.id.title);
-            tagView = view.findViewById(R.id.tag);
-            descriptionView = view.findViewById(R.id.description);
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            titleView = itemView.findViewById(R.id.title);
+            tagView = itemView.findViewById(R.id.tag);
+            descriptionView = itemView.findViewById(R.id.description);
         }
-    }
 
-    public NoteAdapter(List<Note> values) {
-        this.values = values;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                         int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_notelist, parent, false);
-
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.titleView.setText(values.get(position).Title);
-//        holder.tagView.setText(values.get(position).Tag);
-        holder.descriptionView.setText(values.get(position).Description);
-    }
-
-    @Override
-    public int getItemCount() {
-        return values.size();
+        public void bind(final Note item, final OnItemClickListener listener, final OnItemLongClickListener longClickListener) {
+            titleView.setText(item.Title);
+            tagView.setText(item.Tags);
+            descriptionView.setText(item.Description);
+            itemView.setOnClickListener(v -> listener.onItemClick(item, getAdapterPosition()));
+            itemView.setOnLongClickListener(v -> longClickListener.onItemLongClick(item, getAdapterPosition()));
+        }
     }
 }
