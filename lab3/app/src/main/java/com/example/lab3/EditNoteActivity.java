@@ -17,7 +17,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EditNoteActivity extends AppCompatActivity {
@@ -50,7 +53,7 @@ public class EditNoteActivity extends AppCompatActivity {
             note = Note.findById(Note.class, id);
         }
         else {
-            note = new Note(titleEdit.getText().toString(), null, contentEdit.getText().toString());
+            note = new Note(titleEdit.getText().toString(), null, contentEdit.getText().toString(), Calendar.getInstance().getTime());
         }
         note.save();
         id = note.getId();
@@ -72,7 +75,11 @@ public class EditNoteActivity extends AppCompatActivity {
         tagsEdit = findViewById(R.id.enter_tags);
 
         note = Note.findById(Note.class, id);
-        note.Title = titleEdit.getText().toString();
+        note.Created = Calendar.getInstance().getTime();
+        String title = titleEdit.getText().toString();
+        if (!title.isEmpty())
+            note.Title = title;
+        else note.Title = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         note.Description = contentEdit.getText().toString();
         note.Tags = tagsEdit.getText().toString();
         note.save();

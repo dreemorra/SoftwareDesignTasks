@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">lab3</string>
-    <string name="action_sort">Sort by</string>
+    <string name="sort_by_title_str">Sort by title</string>
+    <string name="sort_by_date_str">Sort by date</string>
     <string name="search_hint">Search…</string>
     <string name="tags">Tags</string>
     <string name="title">Title</string>

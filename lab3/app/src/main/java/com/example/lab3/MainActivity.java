@@ -25,8 +25,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    // TODO: add date
-
     public RecyclerView recyclerView;
     private ArrayList<Note> noteList;
     private ArrayList<String> tagList;
@@ -163,29 +161,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_sort) {
-            sortList();
-            return true;
+        switch (id) {
+            case R.id.sort_by_title: {
+                sortList(true);
+                return true;
+            }
+            case R.id.sort_by_date: {
+                sortList(false);
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void sortList() {
+    private void sortList(boolean isTitle) {
         AlertDialog.Builder mySortAlertDialog = new AlertDialog.Builder(this);
-        mySortAlertDialog.setTitle("Sort by?");
+        mySortAlertDialog.setTitle("Sort by");
         String[] r = {"Ascending", "Descending"};
         final String[] selected = {""};
         mySortAlertDialog.setSingleChoiceItems(r, -1,
                 (dialog, which) -> selected[0] = r[which]);
 
         mySortAlertDialog.setPositiveButton("OK", (dialog, which) -> {
-            if (selected[0].equals("Descending"))
-            {
-                noteList.sort((note1, note2) -> note2.Title.compareTo(note1.Title));
+            if (isTitle) {
+                if (selected[0].equals("Descending"))
+                    noteList.sort((note1, note2) -> note2.Title.compareTo(note1.Title));
+                else if (selected[0].equals("Ascending"))
+                    noteList.sort((note1, note2) -> note1.Title.compareTo(note2.Title));
             }
-            else if (selected[0].equals("Ascending")) {
-                noteList.sort((note1, note2) -> note1.Title.compareTo(note2.Title));
+            else {
+                if (selected[0].equals("Descending"))
+                    noteList.sort((note1, note2) -> note2.Created.compareTo(note1.Created));
+                else if (selected[0].equals("Ascending"))
+                    noteList.sort((note1, note2) -> note1.Created.compareTo(note2.Created));
             }
+
             adapter.notifyDataSetChanged();
         });
         mySortAlertDialog.create().show();
@@ -214,12 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             noteList.add(note);
             adapter.notifyItemInserted(noteList.size() - 1);
         }
-        tagList = new ArrayList<>();
-        noteList = (ArrayList<Note>) Note.listAll(Note.class);
-        for (Note elem : noteList) {
-            List<String> tags = Arrays.asList(elem.Tags.split(", "));
-            getTags();
-        }
+        getTags();
     }
 }
 
