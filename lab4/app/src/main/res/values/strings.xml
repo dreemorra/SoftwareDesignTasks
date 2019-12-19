@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">lab4</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="enter_rss_url_plz">Enter RSS Url plz</string>
+</resources>
