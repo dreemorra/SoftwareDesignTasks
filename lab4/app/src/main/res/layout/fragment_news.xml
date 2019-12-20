@@ -23,10 +23,4 @@
             />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:visibility="invisible" />
 </LinearLayout>

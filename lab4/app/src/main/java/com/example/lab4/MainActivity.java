@@ -2,22 +2,23 @@ package com.example.lab4;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -28,21 +29,17 @@ import com.prof.rssparser.Parser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     SwipeRefreshLayout swipeRefreshLayout;
     ArrayList<News> newsList;
+    ArrayList<String> rssUrls;
     Snackbar snackbar;
     String rssUrl;
-    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,24 +49,28 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.pullToRefresh);
         swipeRefreshLayout.setOnRefreshListener(() -> getFeed(true));
 
-        progressBar = findViewById(R.id.progressBar);
-
         recyclerView = findViewById(R.id.list);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
         newsList = new ArrayList<>();
+        rssUrls = new ArrayList<>();
+        List<Urls> tmp = Urls.listAll(Urls.class);
+        for (Urls item : tmp) {
+            rssUrls.add(item.RssUrl);
+        }
+
         adapter = new NewsAdapter(newsList,
                 (item, pos) -> {
                     Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
                     intent.putExtra("URL", item.Url);
                     MainActivity.this.startActivityForResult(intent, 1);
-                    Log.e("Click", "Clicked!");
+//                    Log.e("Click", "Clicked!");
                 });
         recyclerView.setAdapter(adapter);
 
         snackbar = Snackbar.make(recyclerView, "No internet connection", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("Retry", v ->
-        {
+        snackbar.setAction("Retry", v -> {
             getFeed();
             snackbar.dismiss();
         });
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             askUrl();
         else
             getFeed();
+
     }
 
     private void getFeed(){
@@ -99,16 +101,14 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(() -> adapter.notifyDataSetChanged());
             }
 
-            snackbar.dismiss();
             newsList.clear();
 
             Parser parser = new Parser();
             parser.onFinish(new OnTaskCompleted() {
                 @Override
                 public void onTaskCompleted(List<Article> list) {
-                    if (!isSwipe)
-                    {
-                        runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
+                    if (isSwipe) {
+                        runOnUiThread(() -> swipeRefreshLayout.setRefreshing(true));
                     }
                     int i = 0;
                     SugarRecord.deleteAll(News.class);
@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                         news.Title = article.getTitle();
                         news.Content = article.getDescription();
                         news.Date = article.getPubDate();
-                                //.removeRange(article.getPubDate().length() - 12, article.getPubDate().length());
                         if (article.getImage() != null) {
                             news.ImageUrl = article.getImage();
                         }
@@ -129,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
                             news.save();
                         }
                     }
-
                     runOnUiThread(() -> adapter.notifyDataSetChanged());
+                    runOnUiThread(() -> swipeRefreshLayout.setRefreshing(false));
                 }
 
                 @Override
@@ -140,6 +139,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                     runOnUiThread(() -> Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show());
                     Log.e("Exception", e.toString());
+                    if (!isOnline())
+                    {
+                        swipeRefreshLayout.setRefreshing(false);
+
+                        snackbar.show();
+                        List<News> savedNews = SugarRecord.listAll(News.class);
+                        newsList.addAll(savedNews);
+
+                        runOnUiThread(() -> adapter.notifyDataSetChanged());
+                    }
                     e.printStackTrace();
                 }
 
@@ -148,10 +157,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (isSwipe) {
                 runOnUiThread(() -> swipeRefreshLayout.setRefreshing(false));
-            }
-            else{
-                runOnUiThread(() -> progressBar.setVisibility(View.INVISIBLE));
-
             }
 
         }).start();
@@ -180,6 +185,11 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("URL", rssUrl);
                     editor.apply();
+
+                    Urls urlItem = new Urls(rssUrl);
+                    rssUrls.add(urlItem.RssUrl);
+                    urlItem.save();
+
                     getFeed();
                 }
                 else if (rssUrl.equals("")) {
@@ -207,18 +217,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isOnline() {
-        try {
-            int timeoutMs = 1500;
-            Socket socket = new Socket();
-            InetSocketAddress socketAddress = new InetSocketAddress("8.8.8.8", 53);
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-            socket.connect(socketAddress, timeoutMs);
-            socket.close();
+        assert cm != null;
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
 
+    private void showStoredUrls() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String[] r = rssUrls.toArray(new String[0]);
+        builder.setTitle("Choose URL")
+                .setItems(r, (dialog, which) -> {
+                    SharedPreferences preferences = getSharedPreferences("prefName", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("URL", rssUrls.get(which));
+                    editor.apply();
+                    rssUrl = rssUrls.get(which);
+                    getFeed();
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.change_link_item) {
+            askUrl();
             return true;
         }
-        catch (IOException e) {
-            return false;
+        if (id == R.id.choose_link_item) {
+            showStoredUrls();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 }
+

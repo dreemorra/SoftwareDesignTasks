@@ -6,4 +6,6 @@
     <string name="title">Title</string>
     <string name="date">Date</string>
     <string name="enter_rss_url_plz">Enter RSS Url plz</string>
+    <string name="change_link">Change link</string>
+    <string name="choose_link">Choose link</string>
 </resources>
